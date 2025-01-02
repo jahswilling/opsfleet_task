@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: x86-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: x86-app
+  template:
+    metadata:
+      labels:
+        app: x86-app
+    spec:
+      containers:
+        - name: x86-app
+          image: nginx:latest
+          resources:
+            requests:
+              cpu: 500m
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
